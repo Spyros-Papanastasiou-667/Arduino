@@ -67,6 +67,8 @@ void loop() {
 			}
 		}
 		length=Q->items;
+		while(input=='\n' || input=='\r')
+			input=Serial.read();
 		while((input=dequeue(Q)))
 		{
 			if(input!='\n' && input!='\r')
