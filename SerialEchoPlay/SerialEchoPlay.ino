@@ -28,7 +28,7 @@ void setup() {
 		Serial.begin(115200);
 
 	// needed for Leonardo
-		while(!Serial);
+//		while(!Serial);
 	//
 
 	// initialize queue
