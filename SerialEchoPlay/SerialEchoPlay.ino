@@ -1,218 +1,64 @@
-typedef char	item;
-typedef struct node{
-	item i;
-	struct node * next;
-}Node;
-
-typedef struct queue{
-	int items;
-	Node * start;
-}Queue;
-
-Queue * Q;
-
-
-void enqueue(Queue * Q,item i);
-item dequeue(Queue * Q);
-
-typedef Queue Stack;
-
-Stack * S,* S2;
-void push(Stack * S,item i);
-item pop(Stack * S);
+#define BUFF 10
+char str[BUFF+1]={0};
+char * strPtr=NULL;
+char c='\0';
+int i=0;
 
 void setup() {
-	// put your setup code here, to run once:
-
-	// Initialize Serial
-		Serial.begin(115200);
-
-	// needed for Leonardo
-//		while(!Serial);
-	//
-
-	// initialize queue
-		Q=new Queue;
-		Q->items=0;
-		Q->start=NULL;
-	//
-	//	initialize stack
-		S=new Stack;
-		S->items=0;
-		S->start=NULL;
-		// 2
-		S2=new Stack;
-		S2->items=0;
-		S->start=NULL;
-	//
+	Serial.begin(115200);
+	Serial.println("setup finished");
 }
 
-char input=0;
-int length=0,tmp=0;
-long counter=0;
 void loop() {
-	counter++;
-	// put your main code here, to run repeatedly:
-	input=0;
 	if(Serial.available()>0)
 	{
-		while(input!='\n' && input!='\r')
+		/*      G e t    L i n e      */
+		for(i=0;i<BUFF;i++)
 		{
-			if(Serial.available()>0)
+			while(!Serial.available());
+			str[i]=Serial.read();
+			str[i+1]='\0';
+			if(str[i] == '\n')
 			{
-				input=Serial.read();
-				enqueue(Q,input);
-//				Serial.print("Enqueued:: ");
-//				Serial.println(input);
+				while(Serial.available())
+					Serial.read();
+				break;
 			}
 		}
-		length=Q->items;
-		while(input=='\n' || input=='\r')
-			input=Serial.read();
-		while((input=dequeue(Q)))
+		if(i>=BUFF)
 		{
-			if(input!='\n' && input!='\r')
-			{
-				push(S,input);
-				Serial.print(input);
-			}
+			while((c=Serial.read())!='\n')
+				while(!Serial.available());
 		}
-		/* 
-		 * start <<---
-		 * _
-		 * --->>
-		 *      _
-		 * <<---
-		 * ...
-		 * */
-		for(int i=0;i<4;i++)
+		Serial.print(str);
+		Serial.print(" StrLen:: ");
+		Serial.println(strlen(str));
+		/* **************************** */
+		/* str holds a BUFF-lengthed input string */
+		/* start playing ... */
+		Serial.print(str);
+		for(int j=0;j<3;j++)
 		{
-			while(input=pop(S))
+			for (i=0;i< BUFF;i++)
 			{
-				push(S2,input);
+				delay(75);
 				Serial.print("\b \b");
+			}
+			for(i=0;i<BUFF;i++)
+			{
 				delay(75);
-			}
-			while(input=pop(S2))
-			{
-				push(S,input);
-				Serial.print(input);
-				delay(75);
+				Serial.print(str[i]);
 			}
 		}
-		while(pop(S));
-		while(pop(S2));
-		while(dequeue(Q));
-		Serial.print("  :: ");
-		Serial.print(millis());
-		Serial.print(" counter is :: ");
-		Serial.println(counter);
-//		Serial.println("Hello!!");
-	}
-//	delay(1000);
-}
-
-void enqueue(Queue * Q,item i)
-{
-	if(Q)
-	{
-		if(Q->start==NULL)
-		{
-			Q->items=1;
-			Q->start=new Node;
-			Q->start->i=i;
-			Q->start->next=NULL;
-			return;
-		}else
-		{
-			(Q->items)++;
-			Node * tmpNode=Q->start;
-			while(tmpNode->next)
-			{
-				tmpNode=tmpNode->next;
-			}
-			tmpNode->next=new Node;
-			tmpNode=tmpNode->next;
-			tmpNode->i=i;
-			tmpNode->next=NULL;
-			return;
-		}
+		Serial.println();
+		Serial.println("----------");
+		/* empty the string */
+		for(i=0;i<BUFF+1;i++)
+			str[i]='\0';
 	}
 }
 
-item dequeue(Queue * Q)
-{
-	if(Q && Q->start)
-	{
-		Node * tmpNode=Q->start;
-		item i=tmpNode->i;
-		Q->start=tmpNode->next;
-		(Q->items)--;
-		delete tmpNode;
-		return i;
-	}else
-	{
-		return 0;
-	}
-}
-
-/* 
- * Stack
- * */
-
-void push(Stack * S,item i)
-{
-	if(S)
-	{
-		if(S->start==NULL)
-		{
-			S->items=1;
-			S->start=new Node;
-			S->start->i=i;
-			S->start->next=NULL;
-			return;
-		}else
-		{
-			(S->items)++;
-			Node * tmpNode=S->start;
-			while(tmpNode->next)
-				tmpNode=tmpNode->next;
-			tmpNode->next=new Node;
-			tmpNode=tmpNode->next;
-			tmpNode->i=i;
-			tmpNode->next=NULL;
-			return;
-		}
-	}
-}
-
-item pop(Stack * S)
-{
-	if(S && S->start)
-	{
-		if(S->items >= 2)
-		{
-			Node * prev,* tmp;
-			prev=tmp=S->start;
-			while(tmp->next)
-			{
-				prev=tmp;
-				tmp=tmp->next;
-			}
-			item i = tmp->i;
-			delete tmp;
-			prev->next=NULL;
-			(S->items)--;
-			return i;
-		}else if(S->items == 1)
-		{
-			item i=S->start->i;
-			delete S->start;
-			S->start=NULL;
-			(S->items)--;
-			return i;
-		}
-	}
-	else
-		return 0;
+void clearNL(void){
+	while(Serial.available())
+		Serial.read();
 }
