@@ -64,7 +64,7 @@ class temp
 AS6200 thermometer;
 
 /*
- * hold two bytes for the last record
+ * hold two bytes on the start of EEPROM for the last record
  * */
 class pointer{
 	public:
@@ -106,11 +106,12 @@ class pointer{
 			old_address<<=8;
 			old_address|=at24c256b.read_byte();
 			uint i=2;
-			Serial << "printing data from EEPROM ##########" << endl;
+			Serial << "printing data from EEPROM ##########" << endl << endl << endl;
+			Serial << "min,°C" << endl;
 			while(i<=old_address)
 			{
 				ushort data;
-				Serial << i << ",";
+				Serial << i/2 << ",";
 				i+=2;
 				data=at24c256b.read_byte();
 				data<<=8;
@@ -119,7 +120,7 @@ class pointer{
 //				data_double=data*0.0625;
 				Serial.println(data*0.0625);
 			}
-			Serial << "end of data               ##########" << endl;
+			Serial << endl << endl << "end of data               ##########" << endl;
 		}
 		void dump_data_hex(void)
 		{// CHECK copy code from csv
