@@ -164,7 +164,7 @@ void setup()
 	Serial.begin(115200);
 //	while(!Serial);
 	thermometer.set_single_shot_mode();
-	thermometer.get_temperature();
+//	thermometer.get_temperature();
 	for(byte i=0;i<30;i++)
 	{
 		digitalWrite(13,HIGH);
@@ -190,6 +190,7 @@ void loop()
 	{
 		temperature_interval=millis();
 		ushort temperature=thermometer.get_temperature();
+		thermometer.set_single_shot_mode();
 		if(Serial) Serial << "temperature :: " << temperature*0.0625 << "°C" << endl;
 		pointer_on_EEPROM.append_to_EEPROM(temperature);
 //		ushort addr=pointer_on_EEPROM.get_current_address();
