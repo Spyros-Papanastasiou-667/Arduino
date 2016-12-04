@@ -10,58 +10,6 @@
 
 #define UPDATE_POINTER_INTERVAL 5000// ms
 
-elapsedMillis updatePointerTime;
-
-/*
- * hold two bytes for the start of the last record
- * */
-
-class temp
-{
-	public:
-		temp():data(0), records_added(0)
-		{}
-		void addRecord(byte data[2])
-		{
-			if(isFull())
-			{
-				/*
-				 * 1) write to EEPROM
-				 * 2) empty variables
-				 * 3) add new data
-				 * * * * * * * * * * */
-			}
-			switch(records_added)
-			{
-				case 0:
-					this->data=data[0];
-					this->data<<=4;
-					this->data|=data[1]>>4;
-					records_added++;
-					break;
-				case 1:
-					this->data<<=8;
-					this->data|=data[0];
-					this->data<<=4;
-					this->data|=data[1]>>4;
-					records_added++;
-					break;
-				default:
-					break;
-			}
-		}
-		bool isFull()
-		{
-			if(records_added>=2)
-				return true;
-			else
-				return false;
-		}
-	private:
-		byte records_added;
-		uint data;
-};
-
 AS6200 thermometer;
 
 pointer pointer_on_EEPROM;
