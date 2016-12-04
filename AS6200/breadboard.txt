@@ -1,0 +1,42 @@
+
+|-------------------|
+|                   |
+|      AS6200       |
+|     (adaptor)     |
+|                   |
+|-------------------|
+ SCL SDA GND VDD IRQ
+  |   |   |   ||   |
+  |    \   \  ||
+   \    0===0=//
+    \ // \   \
+     0    \   \
+    //\    \  \\
+   //  0====0===+
+  || // \    \  \\
+ VCC WP SCL SDA   \
+|--------------|   |
+\              |   |
+ |  AT24C256B  |   |
+/              |   |
+|--------------|   |
+  A0 A1 A2 GND     |
+   |  |  |  |      |
+   \--+--+--+-----/
+
+---------------\
+ARDUINO ::     |
+-------        |
+VCC/VDD = 3.3V |
+GND     = GND  |
+SDA     = SDA  |
+
+
+notes:
+- i think EEPROM needs resistors
+- pin 7 on leonardo may be the only
+  available for interrupt
+
+       |--------|
+GND -- | button | -- PIN_7
+       |--------|
