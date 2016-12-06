@@ -75,8 +75,7 @@ void loop()
 	{
 		temperature_interval=millis();
 		temperature=thermometer.get_temperature();
-		thermometer.set_single_shot_mode();
-		double temperature_human_readable=(temperature>>8)+(temperature&0xFF)*0.0625;
+		double temperature_human_readable=(temperature>>8)+((temperature>>4)&0x0F)*0.0625;
 		if(Serial) Serial << temperature_human_readable << "°C (appended to EEPROM)" << endl;
 		pointer_on_EEPROM.append_to_EEPROM(temperature);
 //		ushort addr=pointer_on_EEPROM.get_current_address();
@@ -85,13 +84,14 @@ void loop()
 		digitalWrite(13,HIGH);
 		delay(50);
 		digitalWrite(13,LOW);
+		thermometer.set_single_shot_mode();
 	}
 	if(millis()-regular_print_interval>10000 && Serial)
 	{
 		regular_print_interval=millis();
-		temperature=thermometer.get_temperature_human_readable();
+		double temperature_human_readable=thermometer.get_temperature_human_readable();
+		Serial << temperature_human_readable << "°C" << endl;
 		thermometer.set_single_shot_mode();
-		Serial << temperature << "°C" << endl;
 	}
 	if(flag_reset_pointer_on_EEPROM)
 	{

@@ -58,9 +58,10 @@ ushort AS6200::get_temperature(void)
 double AS6200::get_temperature_human_readable(void)
 {
 	get_temperature();
+//	Serial << "DEBUG :: 0x" << _HEX(last_temperature) << endl;
 	double temperature;
 	temperature=last_temperature>>8;
-	temperature+=(last_temperature&0xFF)*0.0625;
+	temperature+=((last_temperature>>4)&0x0F)*0.0625;
 //	temperature=last_temperature*0.0625;
 	return temperature;
 }

@@ -69,19 +69,24 @@ void pointer::dump_data_csv(void)
 //	at24c256b.read_byte_manual_request(current_address-2);
 	while(i<=current_address)
 	{
-		ushort data;
-		Serial.print(i/2);
-		Serial.print(",");
-		data=at24c256b.read_byte();
-		data<<=8;
-		data|=at24c256b.read_byte();
+		double data;
+		byte tmp_byte;
+		Serial << i/2*10 << ",";
+//		Serial.print(i/2);
+//		Serial.print(",");
+		tmp_byte=at24c256b.read_byte();
+		data=tmp_byte;
+//		data<<=8;
+		tmp_byte=at24c256b.read_byte();
+		data+=(tmp_byte>>4)*0.0625;
 		i+=2;
 //		data>>=4;
 //				data>>=4;
 //				data_double=data*0.0625;
 //		Serial.print(data,HEX);
 //		Serial.print("\t");
-		Serial.println(data*0.0625);
+//		Serial.println(data*0.0625);
+		Serial << data << endl;
 	}
 	Serial.println();
 	Serial.println();
