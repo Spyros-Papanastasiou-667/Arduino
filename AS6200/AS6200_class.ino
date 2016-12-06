@@ -51,7 +51,7 @@ ushort AS6200::get_temperature(void)
 	data<<=8;
 	if(Wire.available())
 		data|=Wire.read();
-	data>>=4;
+//	data>>=4;
 	last_temperature=data;
 	return data;
 }
@@ -59,7 +59,9 @@ double AS6200::get_temperature_human_readable(void)
 {
 	get_temperature();
 	double temperature;
-	temperature=last_temperature*0.0625;
+	temperature=last_temperature>>8;
+	temperature+=(last_temperature&0xFF)*0.0625;
+//	temperature=last_temperature*0.0625;
 	return temperature;
 }
 void AS6200::set_single_shot_mode(void)
@@ -67,7 +69,7 @@ void AS6200::set_single_shot_mode(void)
 	Wire.beginTransmission(device_address);
 	Wire.write((byte) 1);//CONFIG
 	Wire.write((byte) 0x81);// SS, SM
-	Wire.write((byte) 0);
+	Wire.write((byte) 0x00);
 	Wire.endTransmission();
 	Wire.beginTransmission(device_address);
 	Wire.write((byte) 0);// prepare to read TVAL
@@ -78,7 +80,7 @@ void AS6200::set_continuous_mode(void)
 	Wire.beginTransmission(device_address);
 	Wire.write((byte) 1);//CONFIG
 	Wire.write((byte) 0x00);
-	Wire.write((byte) 0);
+	Wire.write((byte) 0x00);// T=4sec
 	Wire.endTransmission();
 	Wire.beginTransmission(device_address);
 	Wire.write((byte) 0);// prepare to read TVAL

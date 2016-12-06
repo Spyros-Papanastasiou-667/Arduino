@@ -70,13 +70,14 @@ ulong regular_print_interval;
 void loop()
 {
 ///*
-	double temperature;
+	ushort temperature;
 	if(millis()-temperature_interval> 600000)// FIX does not work with 60*1000
 	{
 		temperature_interval=millis();
 		temperature=thermometer.get_temperature();
 		thermometer.set_single_shot_mode();
-		if(Serial) Serial << temperature*0.0625 << "°C (appended to EEPROM)" << endl;
+		double temperature_human_readable=(temperature>>8)+(temperature&0xFF)*0.0625;
+		if(Serial) Serial << temperature_human_readable << "°C (appended to EEPROM)" << endl;
 		pointer_on_EEPROM.append_to_EEPROM(temperature);
 //		ushort addr=pointer_on_EEPROM.get_current_address();
 //		Serial << "current address :: " << addr << endl;
